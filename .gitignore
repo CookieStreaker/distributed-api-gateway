@@ -1,0 +1,11 @@
+# Binaries and IDEs
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+.vscode/
+
+# Core dumps
+lock

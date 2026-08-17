@@ -1,17 +1,90 @@
-version: "3.8"
+# =============================================================================
+# Docker Compose — Full Distributed API Gateway Stack
+# =============================================================================
+# Services:
+#   1. gateway          — The Go reverse proxy + rate limiter (ports 8080, 8081)
+#   2. redis            — Centralized state store for token buckets
+#   3. prometheus        — Metrics scraping & time-series storage
+#   4. user-service     — Dummy upstream (traefik/whoami)
+#   5. product-service  — Dummy upstream (traefik/whoami)
+# =============================================================================
 
 services:
+  # ---------------------------------------------------------------------------
+  # The API Gateway — core of the system
+  # ---------------------------------------------------------------------------
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"    # Reverse proxy (API traffic)
+      - "8081:8081"    # Admin dashboard & internal APIs
+    depends_on:
+      redis:
+        condition: service_started
+      user-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+  # ---------------------------------------------------------------------------
+  # Redis — centralized rate limit state (Token Bucket via Lua scripts)
+  # ---------------------------------------------------------------------------
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - gateway-net
 
+  # ---------------------------------------------------------------------------
+  # Prometheus — metrics collection & querying
+  # Accessible at http://localhost:9090
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    depends_on:
+      - gateway
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+  # ---------------------------------------------------------------------------
+  # Upstream Service 1 — simulates a User microservice
+  # ---------------------------------------------------------------------------
   user-service:
     image: traefik/whoami
-    ports:
-      - "8081:80"
+    restart: unless-stopped
+    networks:
+      - gateway-net
 
+  # ---------------------------------------------------------------------------
+  # Upstream Service 2 — simulates a Product microservice
+  # ---------------------------------------------------------------------------
   product-service:
     image: traefik/whoami
-    ports:
-      - "8082:80"
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+# Named volumes for data persistence across restarts
+volumes:
+  redis-data:
+  prometheus-data:
+
+# Isolated bridge network for inter-service communication
+networks:
+  gateway-net:
+    driver: bridge

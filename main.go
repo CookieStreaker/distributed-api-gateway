@@ -449,7 +449,7 @@ func startAdminServer(cfg *Config, admin *adminServer) *http.Server {
 	mux.HandleFunc("/api/stats", admin.handleStats)
 	mux.HandleFunc("/api/routes", admin.handleRoutes)
 
-	addr := fmt.Sprintf(":%d", cfg.Server.AdminPort)
+	addr := fmt.Sprintf("0.0.0.0:%d", cfg.Server.AdminPort)
 	srv := &http.Server{
 		Addr:         addr,
 		Handler:      mux,
@@ -717,7 +717,7 @@ func main() {
 		)
 	})
 
-	gatewayAddr := fmt.Sprintf(":%d", cfg.Server.Port)
+	gatewayAddr := fmt.Sprintf("0.0.0.0:%d", cfg.Server.Port)
 	gatewaySrv := &http.Server{
 		Addr:         gatewayAddr,
 		Handler:      gatewayMux,

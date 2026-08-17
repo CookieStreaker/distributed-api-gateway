@@ -1,20 +1,10 @@
-# =============================================================================
-# Multi-Stage Dockerfile for the Distributed API Gateway
-# =============================================================================
-# Stage 1: Compile the Go binary with all dependencies
-# Stage 2: Copy into a minimal Alpine image (~15MB total)
-# =============================================================================
-
-# --- Stage 1: Build ---
-FROM golang:1.24-alpine AS builder
+FROM golang:alpine AS builder
 
 WORKDIR /app
 
-# Copy dependency files first (Docker layer caching optimization)
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy all source code
 COPY . .
 
 # Build a statically-linked binary

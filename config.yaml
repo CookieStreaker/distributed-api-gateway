@@ -1,45 +1,25 @@
-# =============================================================================
-# Distributed API Gateway — Configuration
-# =============================================================================
-# All gateway behavior is driven from this file. No hardcoded values in Go code.
-# To add a new route, simply append to the 'routes' array below and restart.
-# =============================================================================
-
 server:
-  # Port for the main reverse proxy (handles all API traffic)
   port: 8080
-  # Port for the Admin Dashboard and internal APIs (/api/stats, /api/routes)
   admin_port: 8081
-  # Maximum time the gateway will wait for an upstream response
   read_timeout: 30s
   write_timeout: 30s
 
 redis:
-  # Connection string for the centralized Redis instance
-  # In Docker Compose, the service name "redis" resolves via internal DNS.
   addr: "redis:6379"
-  # Password (leave empty for no auth)
   password: ""
-  # Redis database index (0-15)
   db: 0
 
-# Global default rate limit policy.
-# Applied to any route that does NOT define its own 'rate_limit' override.
+# Global fallback rate limit when not overridden by route
 rate_limit:
-  capacity: 10        # Maximum tokens in the bucket
-  refill_rate: 2       # Tokens added per second (lazy evaluation)
+  capacity: 10
+  refill_rate: 2
 
-# Route definitions.
-# Each route maps a path prefix to an upstream service URL.
-# Optional: override the global rate_limit per route.
 routes:
   - path_prefix: "/users"
     upstream_url: "http://user-service:80"
-    # Uses the global rate limit (10 req capacity, 2/sec refill)
 
   - path_prefix: "/products"
     upstream_url: "http://product-service:80"
-    # Override: this route gets a tighter rate limit
     rate_limit:
       capacity: 5
       refill_rate: 1

@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Gateway — Admin Dashboard</title>
-  <meta name="description" content="Live monitoring dashboard for the Distributed API Gateway & Rate Limiter" />
+  <title>API Gateway Dashboard</title>
 
-  <!-- Tailwind CSS via CDN (no build step required) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -21,66 +19,37 @@
     };
   </script>
 
-  <!-- Inter Font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── Custom Animations & Effects ── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.15); }
-      50%      { box-shadow: 0 0 30px rgba(99, 102, 241, 0.3); }
-    }
     @keyframes counter-tick {
       0%   { transform: scale(1); }
-      50%  { transform: scale(1.08); }
+      50%  { transform: scale(1.06); }
       100% { transform: scale(1); }
     }
-    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out both; }
-    .animate-delay-1 { animation-delay: 0.1s; }
-    .animate-delay-2 { animation-delay: 0.2s; }
-    .animate-delay-3 { animation-delay: 0.3s; }
-    .animate-delay-4 { animation-delay: 0.4s; }
-    .card-glow:hover { animation: pulse-glow 2s ease-in-out infinite; }
-    .counter-tick { animation: counter-tick 0.3s ease-out; }
+    .counter-tick { animation: counter-tick 0.25s ease-out; }
 
-    /* ── Glassmorphism Card ── */
     .glass-card {
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(99, 102, 241, 0.12);
     }
 
-    /* ── Status dot pulse ── */
     @keyframes dot-pulse {
       0%, 100% { opacity: 1; }
       50%      { opacity: 0.4; }
     }
     .status-dot { animation: dot-pulse 2s ease-in-out infinite; }
-
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
   </style>
 </head>
 
 <body class="bg-gray-950 text-gray-100 font-sans min-h-screen antialiased">
-
-  <!-- ═══════════════════════════════════════════════════════════════════════
-       HEADER
-       ═══════════════════════════════════════════════════════════════════════ -->
   <header class="border-b border-gray-800/50">
     <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Gateway Icon -->
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
@@ -88,11 +57,10 @@
         </div>
         <div>
           <h1 class="text-lg font-bold tracking-tight text-white">API Gateway</h1>
-          <p class="text-xs text-gray-500 font-medium">Admin Dashboard</p>
+          <p class="text-xs text-gray-500 font-medium">Telemetry & Route Monitor</p>
         </div>
       </div>
 
-      <!-- Status Badge -->
       <div id="status-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800/50 border border-gray-700/50 transition-all duration-300">
         <span class="status-dot w-2 h-2 rounded-full bg-emerald-400"></span>
         <span class="text-xs font-medium text-gray-300">Connected</span>
@@ -100,16 +68,9 @@
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════════════════════════
-       MAIN CONTENT
-       ═══════════════════════════════════════════════════════════════════════ -->
   <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
-
-    <!-- ─── Stat Cards ─── -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-      <!-- Card 1: Live TPS -->
-      <div class="glass-card rounded-2xl p-6 card-glow transition-all duration-300 hover:border-indigo-500/30 animate-fade-in-up animate-delay-1">
+      <div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:border-indigo-500/30">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Live TPS</span>
           <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
@@ -122,8 +83,7 @@
         <p class="text-xs text-gray-500 mt-2">Transactions per second</p>
       </div>
 
-      <!-- Card 2: Total Requests -->
-      <div class="glass-card rounded-2xl p-6 card-glow transition-all duration-300 hover:border-emerald-500/30 animate-fade-in-up animate-delay-2">
+      <div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:border-emerald-500/30">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Requests</span>
           <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -133,11 +93,10 @@
           </div>
         </div>
         <p id="stat-total" class="text-4xl font-extrabold text-white tracking-tight">0</p>
-        <p class="text-xs text-gray-500 mt-2">Since gateway started</p>
+        <p class="text-xs text-gray-500 mt-2">Cumulative requests processed</p>
       </div>
 
-      <!-- Card 3: Blocked (429s) -->
-      <div class="glass-card rounded-2xl p-6 card-glow transition-all duration-300 hover:border-rose-500/30 animate-fade-in-up animate-delay-3">
+      <div class="glass-card rounded-2xl p-6 transition-all duration-300 hover:border-rose-500/30">
         <div class="flex items-center justify-between mb-4">
           <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Blocked Requests</span>
           <div class="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center">
@@ -151,12 +110,11 @@
       </div>
     </div>
 
-    <!-- ─── Routes Table ─── -->
-    <div class="glass-card rounded-2xl overflow-hidden animate-fade-in-up animate-delay-4">
+    <div class="glass-card rounded-2xl overflow-hidden">
       <div class="px-6 py-5 border-b border-gray-800/50 flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white">Active Routes</h2>
-          <p class="text-xs text-gray-500 mt-0.5">Loaded from config.yaml</p>
+          <p class="text-xs text-gray-500 mt-0.5">Parsed from config.yaml</p>
         </div>
         <span id="route-count" class="text-xs font-medium text-gray-400 bg-gray-800 px-2.5 py-1 rounded-md">0 routes</span>
       </div>
@@ -166,39 +124,33 @@
           <thead>
             <tr class="text-left text-xs font-semibold uppercase tracking-wider text-gray-500 bg-gray-900/30">
               <th class="px-6 py-3">Path Prefix</th>
-              <th class="px-6 py-3">Upstream URL</th>
-              <th class="px-6 py-3">Capacity</th>
-              <th class="px-6 py-3">Refill Rate</th>
+              <th class="px-6 py-3">Upstream Target</th>
+              <th class="px-6 py-3">Burst Capacity</th>
+              <th class="px-6 py-3">Refill Velocity</th>
               <th class="px-6 py-3">Status</th>
             </tr>
           </thead>
           <tbody id="routes-tbody" class="divide-y divide-gray-800/50">
             <tr>
-              <td colspan="5" class="px-6 py-8 text-center text-gray-600 text-xs">Loading routes...</td>
+              <td colspan="5" class="px-6 py-8 text-center text-gray-600 text-xs">Loading route topology...</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ─── Footer ─── -->
     <footer class="text-center py-6">
       <p class="text-xs text-gray-600">
-        Distributed API Gateway &middot; Built with Go, Redis & Prometheus
+        Distributed API Gateway &middot; Telemetry Engine
       </p>
     </footer>
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════════════════════
-       DASHBOARD LOGIC
-       ═══════════════════════════════════════════════════════════════════════ -->
   <script>
-    // ── State ──
     let prevTotal = 0;
     let prevTimestamp = Date.now();
     const POLL_INTERVAL_MS = 2000;
 
-    // ── DOM Refs ──
     const elTps     = document.getElementById('stat-tps');
     const elTotal   = document.getElementById('stat-total');
     const elBlocked = document.getElementById('stat-blocked');
@@ -206,7 +158,6 @@
     const elCount   = document.getElementById('route-count');
     const elBadge   = document.getElementById('status-badge');
 
-    // ── Animated Counter Update ──
     function updateCounter(el, newValue) {
       const formatted = typeof newValue === 'number' && !Number.isInteger(newValue)
         ? newValue.toFixed(1)
@@ -215,20 +166,17 @@
       if (el.textContent !== formatted) {
         el.textContent = formatted;
         el.classList.remove('counter-tick');
-        // Force reflow to re-trigger animation
         void el.offsetWidth;
         el.classList.add('counter-tick');
       }
     }
 
-    // ── Fetch Stats (TPS, Total, Blocked) ──
     async function fetchStats() {
       try {
         const res = await fetch('/api/stats');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
-        // Calculate live TPS from delta
         const now = Date.now();
         const elapsed = (now - prevTimestamp) / 1000;
         const delta = data.total_requests - prevTotal;
@@ -241,37 +189,32 @@
         updateCounter(elTotal, data.total_requests);
         updateCounter(elBlocked, data.blocked_requests);
 
-        setStatus('connected');
-      } catch (err) {
-        console.error('Stats fetch error:', err);
-        setStatus('disconnected');
+        setStatus(true);
+      } catch {
+        setStatus(false);
       }
     }
 
-    // ── Fetch Routes ──
     async function fetchRoutes() {
       try {
         const res = await fetch('/api/routes');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) return;
         const routes = await res.json();
 
         elCount.textContent = `${routes.length} route${routes.length !== 1 ? 's' : ''}`;
 
         if (routes.length === 0) {
-          elTbody.innerHTML = `
-            <tr>
-              <td colspan="5" class="px-6 py-8 text-center text-gray-600 text-xs">No routes configured</td>
-            </tr>`;
+          elTbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-600 text-xs">No routes configured</td></tr>`;
           return;
         }
 
-        elTbody.innerHTML = routes.map((r, i) => `
+        elTbody.innerHTML = routes.map(r => `
           <tr class="hover:bg-gray-800/30 transition-colors duration-150">
             <td class="px-6 py-4">
               <code class="text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded text-xs font-mono">${escapeHtml(r.path_prefix)}</code>
             </td>
             <td class="px-6 py-4 text-gray-300 text-xs font-mono">${escapeHtml(r.upstream_url)}</td>
-            <td class="px-6 py-4 text-gray-300 text-xs">${r.capacity}</td>
+            <td class="px-6 py-4 text-gray-300 text-xs">${r.capacity} tokens</td>
             <td class="px-6 py-4 text-gray-300 text-xs">${r.refill_rate}<span class="text-gray-600">/sec</span></td>
             <td class="px-6 py-4">
               <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -281,17 +224,14 @@
             </td>
           </tr>
         `).join('');
-      } catch (err) {
-        console.error('Routes fetch error:', err);
-      }
+      } catch {}
     }
 
-    // ── Status Badge ──
-    function setStatus(state) {
+    function setStatus(connected) {
       const dot = elBadge.querySelector('span:first-child');
       const label = elBadge.querySelector('span:last-child');
 
-      if (state === 'connected') {
+      if (connected) {
         dot.className = 'status-dot w-2 h-2 rounded-full bg-emerald-400';
         label.textContent = 'Connected';
         elBadge.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800/50 border border-gray-700/50 transition-all duration-300';
@@ -302,19 +242,16 @@
       }
     }
 
-    // ── XSS Protection ──
     function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
     }
 
-    // ── Polling Loop ──
     async function poll() {
       await Promise.all([fetchStats(), fetchRoutes()]);
     }
 
-    // Initial fetch + set interval
     poll();
     setInterval(poll, POLL_INTERVAL_MS);
   </script>

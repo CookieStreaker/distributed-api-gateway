@@ -1,10 +1,3 @@
-# =============================================================================
-# Prometheus Scrape Configuration
-# =============================================================================
-# Scrapes the Go gateway's /metrics endpoint every 5 seconds.
-# The target "gateway:8080" resolves via Docker Compose internal networking.
-# =============================================================================
-
 global:
   scrape_interval: 5s
   evaluation_interval: 5s
